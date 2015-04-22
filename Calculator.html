@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title> Calculator </title>
+		<!--<link rel="stylesheet" href="styles.css" type="text/css"> -->
+		<!-- http://www.dafont.com/calculator.font -->
+		<style type="text/css">		
+			body{
+				background-color: #674AE6;
+			}
+			
+			h1{
+				text-align: center;
+			}
+			
+			#outlinebox{
+				width: 80%;
+				margin: 0 auto;
+				background-color: #333;
+				box-shadow: 10px 10px 5px #888888;
+			}
+			
+			.formula{
+				display: block;
+				height: 15px;
+				width: 240px;
+				background-color:#bccd95;
+				margin: 0 auto;
+				text-align: left;
+			}
+			.input_box{
+				display: block;
+				height: 25px;
+				width: 240px;
+				background-color:#bccd95;
+				margin: 0 auto;
+				text-align: right;
+			}
+			
+			#row{
+				text-align: center;
+				margin: 0 auto;
+			}
+			
+			button{
+				display: inline-block;
+				/*text-align: center;*/
+				height: 50px;
+				width: 70px;
+				color: #B71217;
+				font-size: 20px;
+				box-sizing: border-box;
+				border: 2px solid #B71217;
+				border-radius: 8px;
+				transition: .3s;
+				  -webkit-transition: .3s;
+				  -moz-transition: .3s;
+				  -o-transition: .3s;
+			}
+			button:hover{
+				background-color: black;
+				outline: white;
+				color: #B71217;
+			}
+			.digits{
+				background: Transparent;
+				color: white;
+			}
+		</style>
+	</head>
+	
+	<body>
+	<h1>Calculator</h1>
+	
+	<div id="outlinebox">
+		<form name="display">
+			<input type="text" class="formula" name="formula">
+			<input type="text" class="input_box" name="input_box">
+		</form>
+		
+		
+		<div id="row">
+			<button class="digits">9</button>
+			<button class="digits">8</button>
+			<button class="digits">7</button>
+			<button class="operations">+</button>
+		</div>
+		
+		<div id="row">
+			<button class="digits">6</button>
+			<button class="digits">5</button>
+			<button class="digits">4</button>
+			<button class="operations">-</button>
+		</div>
+
+		<div id="row">
+			<button class="digits">3</button>
+			<button class="digits">2</button>
+			<button class="digits">1</button>	
+			<button class="operations">&divide;</button>
+		</div>
+
+		<div id="row">
+			<button class="digits">.</button>
+			<button class="digits">0</button>
+			<button class="operations">=</button>	
+			<button class="operations">&times;</button>
+		</div>
+	</div>
+	
+	<!-- Operations 
+	
+	<button class="operations">&radic;</button>
+	<button class="operations">&pi;</button>	
+	<button class="operations">sin</button>
+	-->
+		
+	<script type="text/javascript">
+		"use strict";
+		(function(){
+			var formula = document.getElementsByName("formula");
+			var display = document.getElementsByName("input_box");
+			
+			// Number Digits Event Listeners
+			var digits = document.getElementsByClassName("digits");
+			for(var i=0;i<digits.length;i++){
+				digits[i].addEventListener("click", (function(){
+					return function(){
+						formula[0].value += this.innerHTML;
+						display[0].value += this.innerHTML;
+					};
+				})(i),false);
+			}
+			
+			var dot = false;	//Stop decimal point being entered twice on same number
+			
+			// Operations Event Listeners
+			var operations = document.getElementsByClassName("operations");
+			for(var i=0;i<operations.length;i++){
+				operations[i].addEventListener("click",(function(){
+					return function(){
+						var op = this.innerHTML;		
+						var str = formula[0].value;
+						var last_char = str[str.length-1];
+						
+						switch(op){
+						case '=':
+							var equation = formula[0].value.replace(/×/g, '*').replace(/÷/g, '/');
+							display[0].value = eval(equation);
+							break;
+						case '.':
+							if(!dot){
+								dot = true;
+							}
+							break;
+								
+						case '+': case '-': case '÷': case '×':
+							dot = false;
+							last_char = str[str.length-1];
+							
+							//If we have empty string stop user from doing +,÷, × operation
+							if(str.length===0){
+								if(op === ('+' || '÷' ||'×'))
+									break;
+							}
+							//stop user from entering two operations consecutively
+							if( last_char === ('+'|| '-' || '÷' ||'×')){
+								break;
+							}
+						default:
+							formula[0].value += this.innerHTML;
+							display[0].value = "";
+						}
+					};
+				})(i),false);
+			}
+	})();
+	</script>
+	</body>
+</html>
